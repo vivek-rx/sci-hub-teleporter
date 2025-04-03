@@ -1,0 +1,46 @@
+
+{
+    "manifest_version": 3,
+    "name": "Sci-Hub Access",
+    "version": "1.0",
+    "description": "Adds a Sci-Hub button to academic articles for easy access",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+      "default_icon": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+      },
+      "default_title": "Sci-Hub Access"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "*://*.sciencedirect.com/*",
+          "*://*.springer.com/*",
+          "*://*.wiley.com/*",
+          "*://*.nature.com/*",
+          "*://*.tandfonline.com/*",
+          "*://*.acs.org/*",
+          "*://*.ieee.org/*",
+          "*://*.jstor.org/*",
+          "*://pubmed.ncbi.nlm.nih.gov/*",
+          "*://academic.oup.com/*",
+          "*://researchgate.net/*",
+          "*://*.cambridge.org/*",
+          "*://*.mdpi.com/*",
+          "*://*.arxiv.org/*",
+          "*://*.doi.org/*"
+         
+        ],
+        "js": ["content.js"],
+        "css": ["styles.css"]
+      }
+    ],
+    "icons": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  }
+  
