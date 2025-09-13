@@ -1,26 +1,47 @@
-/* styles.css */
+/* Revamped styles for the Sci-Hub button */
 .sci-hub-button {
-  background-color: #4285f4;
+  /* Colors & Background */
+  background-color: #007BFF; /* A more standard and professional blue */
   color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 12px;
-  margin: 10px 0;
-  font-size: 14px;
+  
+  /* Font & Text */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px; /* Slightly larger for better readability */
+  font-weight: 600; /* Bolder weight for emphasis */
+  line-height: 1.5;
+
+  /* Spacing & Layout */
+  padding: 10px 20px; /* Generous padding for a cleaner look */
+  border-radius: 8px; /* Softer, modern border-radius */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Space between text and a potential icon */
+  
+  /* Border & Cursor */
+  border: 1px solid transparent; /* Prevents layout shift on hover */
   cursor: pointer;
-  font-weight: bold;
-  display: inline-block;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, transform 0.2s;
+
+  /* Shadow & Transitions */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* A softer, more pronounced shadow */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother animation curve */
 }
 
+/* Hover State */
 .sci-hub-button:hover {
-  background-color: #3367d6;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Lift the button slightly */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Increase shadow for depth */
 }
 
+/* Active/Click State */
 .sci-hub-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translateY(0); /* Press the button down */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Smaller shadow to simulate pressing */
+  background-color: #004494; /* Even darker blue for a "pressed" effect */
 }
+
+/* Optional: Add a subtle icon with an emoji or SVG */
+.sci-hub-button::before {
+  content: "🔗"; /* You can use an emoji or an SVG icon */
+}
+
