@@ -16,7 +16,7 @@ const SCIHUB_URLS = [
 ];
 
 // Asynchronous function to check each URL and redirect
-async function findWorkingSciHubUrl() {
+async function findWorkingSciHubUrl(doi = findDOI()) {
   for (const url of SCIHUB_URLS) {
     try {
       // Use a race to add a timeout to the fetch request
@@ -30,7 +30,7 @@ async function findWorkingSciHubUrl() {
       // If we get here, the request was successful
       console.log(`Success! Redirecting to: ${url}`);
       alert(`The website is live. Redirecting to: ${url}`);
-      window.location.href = url; // Redirect the user
+      window.location.href = url + doi; // Redirect the user
       return; // Exit the function
       
     } catch (error) {
@@ -43,8 +43,7 @@ async function findWorkingSciHubUrl() {
   alert("Could not find a working Sci-Hub URL. All domains appear to be down.");
 }
 
-// Call the function to start the process
-findWorkingSciHubUrl();
+
 
     // Function to find DOI in the page content
     function findDOI() {
@@ -105,6 +104,9 @@ findWorkingSciHubUrl();
         // Add click event handler
       button.addEventListener('click', function(e) {
       e.preventDefault();
+
+      // Call the function to start the process
+      findWorkingSciHubUrl(doi);
       // Option 1: Direct open
       window.open(SCIHUB_URL + doi, '_blank');
       
