@@ -3,9 +3,49 @@
     // DOI regex pattern
     const DOI_REGEX = /\b(10\.[0-9]{4,}(?:\.[0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/;
     
-    // Sci-Hub URL (update this as needed as Sci-Hub domains change frequently)
-    const SCIHUB_URL = "https://sci-hub.se/";
-    
+const SCIHUB_URLS = [
+  "https://sci-hub.se/",
+  "https://www.sci-hub.red/",
+  "https://sci-hub.st/",
+  "https://sci-hub.ru/",
+  "https://sci-hub.ee/",
+  "https://sci-hub.is/",
+  "https://sci-hub.shop/",
+  "https://sci-hub.wf/"
+
+];
+
+// Asynchronous function to check each URL and redirect
+async function findWorkingSciHubUrl() {
+  for (const url of SCIHUB_URLS) {
+    try {
+      // Use a race to add a timeout to the fetch request
+      const response = await Promise.race([
+        fetch(url, { method: 'HEAD', mode: 'no-cors' }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), 2000)
+        )
+      ]);
+      
+      // If we get here, the request was successful
+      console.log(`Success! Redirecting to: ${url}`);
+      alert(`The website is live. Redirecting to: ${url}`);
+      window.location.href = url; // Redirect the user
+      return; // Exit the function
+      
+    } catch (error) {
+      // If the fetch or timeout failed, log the error and try the next URL
+      console.error(`Failed to reach ${url}: ${error.message}`);
+    }
+  }
+
+  // If the loop finishes without a redirect, it means all domains are down.
+  alert("Could not find a working Sci-Hub URL. All domains appear to be down.");
+}
+
+// Call the function to start the process
+findWorkingSciHubUrl();
+
     // Function to find DOI in the page content
     function findDOI() {
       // Check for DOI in common elements
