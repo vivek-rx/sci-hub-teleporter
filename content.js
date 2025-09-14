@@ -3,45 +3,47 @@
     // DOI regex pattern
     const DOI_REGEX = /\b(10\.[0-9]{4,}(?:\.[0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/;
     
-    // Prioritized list of Sci-Hub URLs
-    const SCIHUB_URLS = [
-      "https://sci-hub.se/",
-      "https://www.sci-hub.red/",
-      "https://sci-hub.st/",
-      "https://sci-hub.ru/",
-      "https://sci-hub.ee/",
-      "https://sci-hub.is/",
-      "https://sci-hub.shop/",
-      "https://sci-hub.wf/"
-    ];
+const SCIHUB_URLS = [
+  "https://sci-hub.se/",
+  "https://www.sci-hub.red/",
+  "https://sci-hub.st/",
+  "https://sci-hub.ru/",
+  "https://sci-hub.ee/",
+  "https://sci-hub.is/",
+  "https://sci-hub.shop/",
+  "https://sci-hub.wf/"
 
-    // Asynchronous function to check each URL and redirect
-    async function findWorkingSciHubUrl(doi) {
-      console.log("Checking for a working Sci-Hub URL...");
+];
+
+// Asynchronous function to check each URL and redirect
+async function findWorkingSciHubUrl(doi = findDOI()) {
+  for (const url of SCIHUB_URLS) {
+    try {
+      // Use a race to add a timeout to the fetch request
+      const response = await Promise.race([
+        fetch(url, { method: 'HEAD', mode: 'no-cors' }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), 2000)
+        )
+      ]);
       
-      for (const url of SCIHUB_URLS) {
-        try {
-          // Use a race to add a timeout to the fetch request
-          const response = await Promise.race([
-            fetch(url, { method: 'HEAD', mode: 'no-cors' }),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Timeout')), 2000)
-            )
-          ]);
-          
-          // If the request was successful, redirect
-          console.log(`Success! Redirecting to: ${url}`);
-          window.location.href = url + doi;
-          return; // Exit the function
-        } catch (error) {
-          // Log the failure and try the next URL
-          console.error(`Failed to reach ${url}: ${error.message}`);
-        }
-      }
-
-      // If the loop finishes, all domains are down.
-      alert("Could not find a working Sci-Hub URL. All domains appear to be down.");
+      // If we get here, the request was successful
+      console.log(`Success! Redirecting to: ${url}`);
+      alert(`The website is live. Redirecting to: ${url}`);
+      window.location.href = url + doi; // Redirect the user
+      return; // Exit the function
+      
+    } catch (error) {
+      // If the fetch or timeout failed, log the error and try the next URL
+      console.error(`Failed to reach ${url}: ${error.message}`);
     }
+  }
+
+  // If the loop finishes without a redirect, it means all domains are down.
+  alert("Could not find a working Sci-Hub URL. All domains appear to be down.");
+}
+
+
 
     // Function to find DOI in the page content
     function findDOI() {
@@ -98,11 +100,19 @@
       button.innerHTML = 'Access via Sci-Hub';
       button.title = 'Open this article in Sci-Hub';
       
-      // Add click event handler
+
+        // Add click event handler
       button.addEventListener('click', function(e) {
-        e.preventDefault();
-        findWorkingSciHubUrl(doi);
-      });
+      e.preventDefault();
+
+      // Call the function to start the process
+      findWorkingSciHubUrl(doi);
+      // Option 1: Direct open
+      window.open(SCIHUB_URL + doi, '_blank');
+      
+      // Option 2: Message background script (alternative approach)
+      chrome.runtime.sendMessage({action: "openSciHub", doi: doi});
+    });
       
       // Try to find a good place to insert the button
       const possibleContainers = [
@@ -148,4 +158,5 @@
     
     // Re-check after a delay for dynamic pages
     setTimeout(initialize, 2000);
-})();
+  })();
+  
